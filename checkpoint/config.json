@@ -1,0 +1,16 @@
+{
+  "network_node_url": "http://madara:9944",
+  "sources": [
+    {
+      "contract": "0x04d10712e72b971262f5df09506bbdbdd7f729724030fa909e8c8e7ac2fd0012",
+      "start": 185778,
+      "deploy_fn": "handleDeploy",
+      "events": [
+        {
+          "name": "new_post",
+          "fn": "handleNewPost"
+        }
+      ]
+    }
+  ]
+}
