@@ -51,7 +51,7 @@ services:
     depends_on:
       - madara
     environment:
-      - RPC_URL=http://madara:9944
+      - RPC_URL=http://host.docker.internal:9944
 
 # blocked while no arm64
 #  apibara:
