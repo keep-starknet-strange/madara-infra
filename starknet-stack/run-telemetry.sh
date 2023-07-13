@@ -2,8 +2,6 @@
 
 cd "$(dirname "$0")"
 
-docker-compose -f docker-compose.yml -f telemetry/docker-compose.telemetry.yml up -d
-
 # Run Substrate Telemetry
 rm -rf substrate-telemetry
 git clone https://github.com/paritytech/substrate-telemetry

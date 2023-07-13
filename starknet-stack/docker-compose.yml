@@ -47,7 +47,9 @@ services:
   misc-apps:
     build:
       context: misc-apps/
-      dockerfile: misc-apps/Dockerfile
+      dockerfile: Dockerfile
+    depends_on:
+      - madara
     environment:
       - RPC_URL=http://madara:9944
 
