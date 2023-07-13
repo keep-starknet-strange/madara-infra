@@ -44,21 +44,29 @@ services:
     networks:
       - internal
 
-  apibara:
-    image: quay.io/apibara/starknet:7f00306001c1ff030ccc1babf49b880dbe6c7e0e 
-    ports:
-      - 7171:7171
-    command:
-      - start
+  misc-apps:
+    build:
+      context: misc-apps/
+      dockerfile: misc-apps/Dockerfile
     environment:
-      - RPC=http://madara:9944
-      - WAIT_FOR_RPC=true
-      - RUST_LOG=warn
-    restart: on-failure
-    depends_on:
-      - madara
-    networks:
-      - internal
+      - RPC_URL=http://madara:9944
+
+# blocked while no arm64
+#  apibara:
+#    image: quay.io/apibara/starknet:7f00306001c1ff030ccc1babf49b880dbe6c7e0e 
+#    ports:
+#      - 7171:7171
+#    command:
+#      - start
+#    environment:
+#      - RPC=http://madara:9944
+#      - WAIT_FOR_RPC=true
+#      - RUST_LOG=warn
+#    restart: on-failure
+#    depends_on:
+#      - madara
+#    networks:
+#      - internal
 
 networks:
   internal:
