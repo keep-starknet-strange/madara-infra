@@ -1,0 +1,10 @@
+version: "3.2"
+
+services:
+  madara:
+    command:
+      - "--rpc-external"
+      - "--rpc-methods=unsafe"
+      - "--dev"
+      - "--telemetry-url"
+      - "ws://host.docker.internal:8001/submit 0"

@@ -2,13 +2,12 @@
 
 cd "$(dirname "$0")"
 
-# TODO: choose things to run instead of running everything
 
 docker-compose up -d
 
 # Run LambdaClass explorer
-rm -rf starknet_explorer
-git clone https://github.com/lambdaclass/starknet_explorer || (cd starknet_explorer ; git pull)
+rm -rf madara_explorer
+git clone https://github.com/lambdaclass/madara_explorer
 cd starknet_explorer
 git checkout dockerfile
 
@@ -21,4 +20,3 @@ git checkout dockerfile
 # make run
 
 docker-compose up -d
-
