@@ -2,13 +2,10 @@
 
 cd "$(dirname "$0")"
 
-
-docker-compose up -d
-
 # Run LambdaClass explorer
 rm -rf madara_explorer
 git clone https://github.com/lambdaclass/madara_explorer
-cd starknet_explorer
+cd madara_explorer
 git checkout dockerfile
 
 # sed -ir 's/\.\/\.volumes\/postgres\//pg-/g' docker-compose.yml
