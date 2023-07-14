@@ -44,19 +44,26 @@ services:
     networks:
       - internal
 
-  misc-apps:
+  starksheet: &deploy
     build:
-      context: misc-apps/
-      dockerfile: Dockerfile
+      dockerfile: misc-apps/starksheet/Dockerfile
+    restart: on-failure
     depends_on:
       - madara
     environment:
       - RPC_URL=${RPC_URL}
       - STARKNET_NETWORK=${STARKNET_NETWORK}
-    volumes:
-      - ./deployments:/app/kakarot/deployments/${STARKNET_NETWORK}
     networks:
       - internal
+    volumes:
+      - ./misc-apps/starksheet/deployments:/app/starksheet-monorepo/packages/starksheet-cairo/deployments
+
+  madara-swap:
+    <<: *deploy
+    build:
+      dockerfile: misc-apps/madara-swap/Dockerfile
+    volumes:
+      - ./misc-apps/madara-swap/deployments:/app/madara-swap/packages/contracts/deployments
 
   kakacet-front:
     image: ghcr.io/kkrt-labs/kakacet/frontend:latest
@@ -68,9 +75,17 @@ services:
     networks:
       - internal
 
-  kakarot-rpc:
+  kakarot:
+    <<: *deploy
     build:
       dockerfile: misc-apps/kakarot/Dockerfile
+    volumes:
+      - ./misc-apps/kakarot/deployments:/app/kakarot/deployments
+    
+  kakarot-rpc:
+    build:
+      context: misc-apps/kakarot
+      dockerfile: Dockerfile.rpc
     ports:
       - 9545:9545
     command: ["./run.sh", "/usr/bin/tini", "--", "/usr/local/bin/kakarot-rpc"]
@@ -79,9 +94,9 @@ services:
       - SHARINGAN_RPC_URL=${RPC_URL}
       - RUST_LOG=trace
     volumes:
-      -  ./deployments:/usr/src/app/deployments
+      -  ./misc-apps/kakarot/deployments:/usr/src/app/deployments
     depends_on:
-      misc-apps:
+      kakarot:
         condition: service_completed_successfully # wait for misc-apps to deploy contracts
     restart: on-failure
     networks:
