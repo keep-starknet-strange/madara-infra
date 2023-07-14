@@ -36,7 +36,7 @@ services:
       - PRIVATE_KEY=0x00c1cf1490de1352865301bb8705143f3ef938f97fdf892f1090dcb5ac7bcd1d
       - STARKNET_ACCOUNT_ADDRESS=0x2
       - TOKEN_ADDRESS=0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
-      - RPC_URL=http://madara:9944
+      - RPC_URL=${RPC_URL}
       - AMOUNT_TRANSFERED=1000000000000000
     restart: on-failure
     depends_on:
@@ -51,7 +51,41 @@ services:
     depends_on:
       - madara
     environment:
-      - RPC_URL=http://host.docker.internal:9944
+      - RPC_URL=${RPC_URL}
+      - STARKNET_NETWORK=${STARKNET_NETWORK}
+    volumes:
+      - ./deployments:/app/kakarot/deployments/${STARKNET_NETWORK}
+    networks:
+      - internal
+
+  kakacet-front:
+    image: ghcr.io/kkrt-labs/kakacet/frontend:latest
+    restart: on-failure
+    ports:
+      - 3002:3000
+    depends_on:
+      - starkcet-back
+    networks:
+      - internal
+
+  kakarot-rpc:
+    build:
+      dockerfile: misc-apps/kakarot/Dockerfile
+    ports:
+      - 9545:9545
+    command: ["./run.sh", "/usr/bin/tini", "--", "/usr/local/bin/kakarot-rpc"]
+    environment:
+      - STARKNET_NETWORK=${STARKNET_NETWORK}
+      - SHARINGAN_RPC_URL=${RPC_URL}
+      - RUST_LOG=trace
+    volumes:
+      -  ./deployments:/usr/src/app/deployments
+    depends_on:
+      misc-apps:
+        condition: service_completed_successfully # wait for misc-apps to deploy contracts
+    restart: on-failure
+    networks:
+      - internal
 
 # blocked while no arm64
 #  apibara:
