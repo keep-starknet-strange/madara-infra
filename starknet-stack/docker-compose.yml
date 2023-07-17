@@ -53,6 +53,48 @@ services:
     environment:
       - RPC_URL=http://host.docker.internal:9944
 
+  # -------
+  # Starken
+  # -------
+  starken-database:
+    image: mongo:6-jammy
+    ports:
+      - 27017:27017
+    volumes:
+      - dbdata:/data/db
+
+  starken-indexer:
+    image: mathitchens/starken-madara-indexer:starken-madara-indexer
+    depends_on:
+      - starken-database
+    environment:
+      - MONGODB_URI=mongodb://starken-database:27017
+      - PORT=5060
+      - INDEXER=MADARA
+      - API_ROUTE=https://api.coingecko.com/api/v3
+      - APIBARA_KEY=dna_lK9j29Vfw1EzAWnk8nU1
+
+  starken-api:
+    image: mathitchens/starken-madara-api:starken-madara-api
+    ports:
+      - 5055:5055
+    depends_on:
+      - starken-database
+      - starken-indexer
+    environment:
+      - MONGODB_URI=mongodb://starken-database:27017
+      - PORT=5055
+    
+  starken-frontend:
+    image: mathitchens/starken-madara-frontend:starken-madara-frontend
+    ports:
+      - 3002:3000
+    depends_on:
+      - starken-api
+    environment:
+      - NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
+      - NEXT_PUBLIC_STARKEN_API_URL=http://starken-api:5055
+
 # blocked while no arm64
 #  apibara:
 #    image: quay.io/apibara/starknet:7f00306001c1ff030ccc1babf49b880dbe6c7e0e 
@@ -69,6 +111,9 @@ services:
 #      - madara
 #    networks:
 #      - internal
+
+volumes:
+  dbdata:
 
 networks:
   internal:
