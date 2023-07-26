@@ -130,6 +130,19 @@ services:
     networks:
       - internal
 
+  madara-swap-deployer:
+    image: ghcr.io/keep-starknet-strange/madara-swap/contracts:latest
+    depends_on:
+      madara:
+        condition: service_healthy
+    environment:
+      ACCOUNT_ADDRESS: "0x3"
+      PRIVATE_KEY: "0x00c1cf1490de1352865301bb8705143f3ef938f97fdf892f1090dcb5ac7bcd1d"
+      RPC_URL: http://madara:9944
+    volumes:
+      - madara-swap-deployments:/app/madara-swap/packages/contracts/deployments
+    networks:
+      - internal
 
   # -------
   # Starken
@@ -199,5 +212,6 @@ volumes:
   starksheet-deployments:
   starksheet-build:
   kakarot-deployments:
+  madara-swap-deployments:
 networks:
   internal:
