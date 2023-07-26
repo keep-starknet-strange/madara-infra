@@ -7,7 +7,6 @@
   <a href="https://github.com/keep-starknet-strange/madara">
     <img src="https://img.shields.io/badge/Official%20Repository-Madara-red"/>
   </a>
-  [![Project license](https://img.shields.io/github/license/keep-starknet-strange/madara.svg?style=flat-square)](LICENSE)
 
 </div>
 
