@@ -5,8 +5,8 @@
 
 <div align="center">
 
-<h1>🏗 Madara: Infrastructure</h1>
-<h3>#TODO tagline</h3>
+<h2>🏗 Madara: Infrastructure</h2>
+<h6>#TODO tagline</h6>
 
 [![Project license](https://img.shields.io/github/license/keep-starknet-strange/madara.svg?style=flat-square)](LICENSE)
 <a href="https://">
