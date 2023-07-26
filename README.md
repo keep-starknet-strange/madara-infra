@@ -4,10 +4,10 @@
   <h2>🏗 Madara: Infrastructure</h2>
   <h6>Main repository for handling the infrastructure efforts for Madara</h6>
   
-  [![Project license](https://img.shields.io/github/license/keep-starknet-strange/madara.svg?style=flat-square)](LICENSE)
-  <a href="https://">
+  <a href="https://github.com/keep-starknet-strange/madara">
   <img src="https://img.shields.io/badge/Official%20Repository-Madara-red"/>
   </a>
+  [![Project license](https://img.shields.io/github/license/keep-starknet-strange/madara.svg?style=flat-square)](LICENSE)
 
 </div>
 
@@ -16,12 +16,12 @@
 - [Disclaimer](#disclaimer)
 - [Getting Started](#getting-started)
     - [Dependencies](#dependencies)
-- [Local testnet](#local-testnet)
-- [Docker/Kubernetes](#docker)
+- [Local Testnet](#local-testnet)
+- [Docker/Kubernetes](#docker-kubernetes)
 - [Ansible](#ansible)
 - [Terraform](#terraform)
 - [Scripts](#scripts)
-- [Starknet Stack](/starknet-stack)
+- [Starknet Stack](#starknet-stack)
     - [Apibara](/starknet-stack#apibara)
     - [Kakarot](/starknet-stack#kakarot)
     - [Madara](/starknet-stack#madara)
@@ -32,3 +32,23 @@
     - [Starkcet](/starknet-stack#starkcet)
     - [Starken](/starknet-stack#starken)
     - [Starksheet](/starknet-stack#starksheet)
+
+## ⚠️ Disclaimer
+
+## Getting Started
+
+### Dependencies
+
+## Local Testnet
+
+## Docker/Kubernetes
+
+## Ansible
+
+## Terraform
+
+## Scripts
+
+## Starknet Stack
+
+
