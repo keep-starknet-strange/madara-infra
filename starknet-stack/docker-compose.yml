@@ -13,11 +13,6 @@ services:
       - "--dev"
     networks:
       - internal
-    healthcheck:
-      # This is a hack to just wait 5s
-      # Need to improve this by calling, for example chainId
-      test: echo "ok"
-      interval: 5s
 
   # -------------
   # Substrate app
