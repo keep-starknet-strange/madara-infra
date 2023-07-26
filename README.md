@@ -1,12 +1,9 @@
 <div align="center">
   <img src="images/readme-header.png" height="256">
 </div>
-<br />
-
-<div align="center">
 
 <h2>🏗 Madara: Infrastructure</h2>
-<h6>#TODO tagline</h6>
+<h6>Main repository for handling the infrastructure efforts for Madara</h6>
 
 [![Project license](https://img.shields.io/github/license/keep-starknet-strange/madara.svg?style=flat-square)](LICENSE)
 <a href="https://">
@@ -17,6 +14,14 @@
 
 ## Table of Contents
 
+- [Disclaimer](#disclaimer)
+- [Getting Started](#getting-started)
+    - [Dependencies](#dependencies)
+- [Local testnet](#local-testnet)
+- [Docker/Kubernetes](#docker)
+- [Ansible](#ansible)
+- [Terraform](#terraform)
+- [Scripts](#scripts)
 - [Starknet Stack](/starknet-stack)
     - [Apibara](/starknet-stack#apibara)
     - [Kakarot](/starknet-stack#kakarot)
