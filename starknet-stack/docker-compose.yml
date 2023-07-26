@@ -13,6 +13,10 @@ services:
       - "--dev"
     networks:
       - internal
+    # Hack, remove when madara adds a HEALTHCHECK
+    healthcheck:
+      test: ["CMD", "echo", "ok"]
+      interval: 5s
 
   # -------------
   # Substrate app
@@ -129,6 +133,44 @@ services:
     restart: on-failure
     networks:
       - internal
+    # Hack, remove when kakarot-rpc adds a HEALTHCHECK
+    healthcheck:
+      test: ["CMD", "echo", "ok"]
+      interval: 5s
+
+  kakasheet-deployer:
+    image: evmsheet-deployer
+    # image: ghcr.io/the-candy-shop/starksheet-monorepo/starksheet-solidity:latest
+    platform: linux/x86_64
+    depends_on:
+      kakarot-rpc:
+        condition: service_healthy
+    environment:
+      RPC_URL: http://kakarot-rpc:3030
+      PRIVATE_KEY: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+    volumes:
+      - kakasheet-broadcast:/app/starksheet/packages/starksheet-solidity/broadcast
+      - kakasheet-out:/app/starksheet/packages/starksheet-solidity/out
+    networks:
+      - internal
+
+  kakasheet-webapp:
+    image: ghcr.io/the-candy-shop/starksheet-monorepo/starksheet-webapp:latest
+    depends_on:
+      kakasheet-deployer:
+        condition: service_completed_successfully
+    working_dir: /app/starksheet/packages/starksheet-webapp
+    volumes:
+      - kakasheet-broadcast:/app/starksheet/packages/starksheet-solidity/broadcast
+      - kakasheet-out:/app/starksheet/packages/starksheet-solidity/out
+    environment:
+      - REACT_APP_NETWORK=kakarot
+      - REACT_APP_RPC_URL=http://0.0.0.0:3030
+      - PORT=3004
+    ports:
+      - '3004:3004'
+    networks:
+      - internal
 
   madara-swap-deployer:
     image: ghcr.io/keep-starknet-strange/madara-swap/contracts:latest
@@ -213,5 +255,7 @@ volumes:
   starksheet-build:
   kakarot-deployments:
   madara-swap-deployments:
+  kakasheet-broadcast:
+  kakasheet-out:
 networks:
   internal:
