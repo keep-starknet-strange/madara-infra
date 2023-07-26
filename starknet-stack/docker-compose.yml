@@ -13,6 +13,11 @@ services:
       - "--dev"
     networks:
       - internal
+    healthcheck:
+      # This is a hack to just wait 5s
+      # Need to improve this by calling, for example chainId
+      test: echo "ok"
+      interval: 5s
 
   # -------------
   # Substrate app
@@ -50,18 +55,38 @@ services:
     networks:
       - internal
 
-  # ------------------------------------
-  # TODO replace for separate containers
-  # ------------------------------------
-  misc-apps:
-    build:
-      context: misc-apps/
-      dockerfile: Dockerfile
+  starksheet-deployer:
+    image: ghcr.io/the-candy-shop/starksheet-monorepo/starksheet-cairo:latest
     depends_on:
       madara:
         condition: service_healthy
     environment:
-      - RPC_URL=http://host.docker.internal:9944
+      ACCOUNT_ADDRESS: "0x3"
+      PRIVATE_KEY: "0x00c1cf1490de1352865301bb8705143f3ef938f97fdf892f1090dcb5ac7bcd1d"
+      RPC_URL: http://madara:9944
+    volumes:
+      - starksheet-deployments:/app/starksheet/packages/starksheet-cairo/deployments
+      - starksheet-build:/app/starksheet/packages/starksheet-cairo/build
+    networks:
+      - internal
+
+  starksheet-webapp:
+    image: ghcr.io/the-candy-shop/starksheet-monorepo/starksheet-webapp:latest
+    depends_on:
+      starksheet-deployer:
+        condition: service_completed_successfully
+    working_dir: /app/starksheet/packages/starksheet-webapp
+    volumes:
+      - starksheet-deployments:/app/starksheet/packages/starksheet-cairo/deployments/madara
+      - starksheet-build:/app/starksheet/packages/starksheet-cairo/build
+    environment:
+      - REACT_APP_NETWORK=madara
+      - REACT_APP_RPC_URL=http://0.0.0.0:9944
+      - PORT=3003
+    ports:
+      - '3003:3003'
+    networks:
+      - internal
 
   # -------
   # Starken
@@ -94,7 +119,7 @@ services:
     environment:
       - MONGODB_URI=mongodb://starken-database:27017
       - PORT=5055
-    
+
   starken-frontend:
     image: mathitchens/starken-madara-frontend:starken-madara-frontend
     ports:
@@ -110,7 +135,7 @@ services:
   # -------
 # blocked while no arm64
 #  apibara:
-#    image: quay.io/apibara/starknet:7f00306001c1ff030ccc1babf49b880dbe6c7e0e 
+#    image: quay.io/apibara/starknet:7f00306001c1ff030ccc1babf49b880dbe6c7e0e
 #    ports:
 #      - 7171:7171
 #    command:
@@ -128,6 +153,7 @@ services:
 
 volumes:
   dbdata:
-
+  starksheet-deployments:
+  starksheet-build:
 networks:
   internal:
