@@ -14,6 +14,9 @@ services:
     networks:
       - internal
 
+  # -------------
+  # Substrate app
+  # -------------
   madara-app:
     image: ghcr.io/keep-starknet-strange/madara-app:latest
     ports:
@@ -21,6 +24,9 @@ services:
     environment:
       WS_URL: "ws://127.0.0.1:9944"
 
+  # --------
+  # Starkcet
+  # --------
   starkcet-front:
     image: ghcr.io/zizou0x/starkcet-frontend:latest
     ports:
@@ -38,18 +44,22 @@ services:
       - TOKEN_ADDRESS=0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7
       - RPC_URL=http://madara:9944
       - AMOUNT_TRANSFERED=1000000000000000
-    restart: on-failure
     depends_on:
-      - madara
+      madara:
+        condition: service_healthy
     networks:
       - internal
 
+  # ------------------------------------
+  # TODO replace for separate containers
+  # ------------------------------------
   misc-apps:
     build:
       context: misc-apps/
       dockerfile: Dockerfile
     depends_on:
-      - madara
+      madara:
+        condition: service_healthy
     environment:
       - RPC_URL=http://host.docker.internal:9944
 
@@ -95,6 +105,9 @@ services:
       - NEXT_PUBLIC_FRONTEND_URL=http://localhost:3000
       - NEXT_PUBLIC_STARKEN_API_URL=http://localhost:5055
 
+  # -------
+  # Apibara
+  # -------
 # blocked while no arm64
 #  apibara:
 #    image: quay.io/apibara/starknet:7f00306001c1ff030ccc1babf49b880dbe6c7e0e 
@@ -108,7 +121,8 @@ services:
 #      - RUST_LOG=warn
 #    restart: on-failure
 #    depends_on:
-#      - madara
+#      madara:
+#       condition: service_healthy
 #    networks:
 #      - internal
 

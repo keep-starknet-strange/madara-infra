@@ -4,6 +4,5 @@ services:
   madara:
    image: we-dont-want-to-use-an-image
    build:
-      context: ../../madara/
-      dockerfile: ../madara-infra/docker/Dockerfile
+      context: ../../
       no_cache: true
