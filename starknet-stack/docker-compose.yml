@@ -112,7 +112,7 @@ services:
       - kakarot-deployments:/deployments
 
   kakarot-rpc:
-    image: ghcr.io/kkrt-labs/kakarot-rpc/node@sha256:c89fb213cb4e6e678fbc74663006061fcf1d2a4aeea5903a78334918816bdc3c
+    image: ghcr.io/kkrt-labs/kakarot-rpc/node:latest
     depends_on:
       kakarot-deployments-parser:
         condition: service_completed_successfully
