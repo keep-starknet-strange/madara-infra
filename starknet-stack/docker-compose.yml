@@ -223,23 +223,22 @@ services:
   # -------
   # Apibara
   # -------
-# blocked while no arm64
-#  apibara:
-#    image: quay.io/apibara/starknet:7f00306001c1ff030ccc1babf49b880dbe6c7e0e
-#    depends_on:
-#      madara:
-#       condition: service_healthy
-#    ports:
-#      - 7171:7171
-#    command:
-#      - start
-#    environment:
-#      - RPC=http://madara:9944
-#      - WAIT_FOR_RPC=true
-#      - RUST_LOG=warn
-#    restart: on-failure
-#    networks:
-#      - internal
+  apibara:
+    image: quay.io/apibara/starknet:latest
+    depends_on:
+      madara:
+       condition: service_healthy
+    ports:
+      - 7171:7171
+    command:
+      - start
+    environment:
+      - RPC=http://madara:9944
+      - WAIT_FOR_RPC=true
+      - RUST_LOG=warn
+    restart: on-failure
+    networks:
+      - internal
 
 volumes:
   dbdata:
