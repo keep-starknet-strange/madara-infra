@@ -74,7 +74,6 @@ services:
     depends_on:
       starksheet-deployer:
         condition: service_completed_successfully
-    working_dir: /app/starksheet/packages/starksheet-webapp
     volumes:
       - starksheet-deployments:/app/starksheet/packages/starksheet-cairo/deployments/madara
       - starksheet-build:/app/starksheet/packages/starksheet-cairo/build
@@ -157,7 +156,6 @@ services:
     depends_on:
       kakasheet-deployer:
         condition: service_completed_successfully
-    working_dir: /app/starksheet/packages/starksheet-webapp
     volumes:
       - kakasheet-broadcast:/app/starksheet/packages/starksheet-solidity/broadcast
       - kakasheet-out:/app/starksheet/packages/starksheet-solidity/out
