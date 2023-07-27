@@ -139,9 +139,7 @@ services:
       interval: 5s
 
   kakasheet-deployer:
-    image: evmsheet-deployer
-    # image: ghcr.io/the-candy-shop/starksheet-monorepo/starksheet-solidity:latest
-    platform: linux/x86_64
+    image: ghcr.io/the-candy-shop/starksheet-monorepo/starksheet-solidity:latest
     depends_on:
       kakarot-rpc:
         condition: service_healthy
