@@ -13,10 +13,6 @@ services:
       - "--dev"
     networks:
       - internal
-    # Hack, remove when madara adds a HEALTHCHECK
-    healthcheck:
-      test: ["CMD", "echo", "ok"]
-      interval: 5s
 
   # -------------
   # Substrate app
@@ -82,7 +78,7 @@ services:
       - REACT_APP_RPC_URL=http://0.0.0.0:9944
       - PORT=3003
     ports:
-      - '3003:3003'
+      - "3003:3003"
     networks:
       - internal
 
@@ -164,7 +160,7 @@ services:
       - REACT_APP_RPC_URL=http://0.0.0.0:3030
       - PORT=3004
     ports:
-      - '3004:3004'
+      - "3004:3004"
     networks:
       - internal
 
