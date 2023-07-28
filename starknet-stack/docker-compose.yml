@@ -105,8 +105,10 @@ services:
     entrypoint:
       - "/bin/sh"
       - "-c"
+      # First line overrides an existing .env to make sure that .env is clean even though docker volume was not cleaned
       - |
         echo "KAKAROT_ADDRESS=$(jq -r '.kakarot.address' /deployments/deployments.json)" > /deployments/.env;
+        echo "REACT_APP_KAKAROT_ADDRESS=$(jq -r '.kakarot.address' /deployments/deployments.json)" >> /deployments/.env;
         echo "PROXY_ACCOUNT_CLASS_HASH=$(jq -r '.proxy' /deployments/declarations.json)" >> /deployments/.env
     volumes:
       - kakarot-deployments:/deployments
@@ -121,7 +123,6 @@ services:
     environment:
       KAKAROT_HTTP_RPC_ADDRESS: "0.0.0.0:3030"
       STARKNET_NETWORK: http://madara:9944
-      EVM_PRIVATE_KEY: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
       RUST_LOG: trace
     volumes:
       - kakarot-deployments:/usr/src/app
@@ -132,6 +133,22 @@ services:
     healthcheck:
       test: ["CMD", "echo", "ok"]
       interval: 5s
+
+  kakacet-front:
+    image: ghcr.io/kkrt-labs/kakacet/frontend:latest
+    ports:
+      - 3005:3000
+    environment:
+      - REACT_APP_RPC_URL=http://0.0.0.0:9944
+    volumes:
+      - kakarot-deployments:/app
+    depends_on:
+      starkcet-back:
+        condition: service_started
+      kakarot-rpc:
+        condition: service_healthy
+    networks:
+      - internal
 
   kakasheet-deployer:
     image: ghcr.io/the-candy-shop/starksheet-monorepo/starksheet-solidity:latest
