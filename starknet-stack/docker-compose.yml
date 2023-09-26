@@ -2,15 +2,14 @@ version: "3.2"
 
 services:
   madara:
-    image: ghcr.io/keep-starknet-strange/madara:v0.1.0-beta
+    image: ghcr.io/keep-starknet-strange/madara:latest
     ports:
       - "9615:9615"
       - "9944:9944"
       - "30333:30333"
     command:
-      - "--rpc-external"
-      - "--rpc-methods=unsafe"
       - "--dev"
+      - "--rpc-cors=all"
     networks:
       - internal
 
@@ -42,6 +41,49 @@ services:
       - "8080:80"
     environment:
       WS_URL: "ws://madara:9944"
+    networks:
+      - internal
+
+  # ---------------
+  # Madara Explorer
+  # ---------------
+  madara-explorer:
+    image: ghcr.io/lambdaclass/madara_explorer:v0.1.5
+    ports:
+      - "4000:4000"
+    environment:
+      - PHX_HOST=localhost
+      - PORT=4000
+      - RPC_API_HOST=http://host.docker.internal:9944
+      - TESTNET_RPC_API_HOST=http://host.docker.internal:9944
+      - TESTNET_2_RPC_API_HOST=http://host.docker.internal:9944
+      - DATABASE_PATH=ecto://postgres:postgres@madara-explorer-db:5432/starknet_explorer_dev
+      - DB_TYPE=postgres
+      - SECRET_KEY_BASE=JyULoT5cLBifW+XNEuCTVoAb+SaFgQt9j227RN0cKpR3wTsrApGd1HNcgeopemyl
+      # remove this when not mandatory
+      - NEWRELIC_KEY=aa
+      - NEWRELIC_APP_NAME=bb
+      ######################
+      - ENABLE_LISTENER=true
+    depends_on:
+      madara:
+        condition: service_healthy
+      madara-explorer-db:
+        condition: service_started
+    networks:
+      - internal
+
+  madara-explorer-db:
+    image: postgres:15.3
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=starknet_explorer_dev
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - madara_explorer_data:/var/lib/postgresql/data/
     networks:
       - internal
 
@@ -322,6 +364,7 @@ services:
 
 volumes:
   dbdata:
+  madara_explorer_data:
   checkpoint-db-data:
   starksheet-deployments:
   starksheet-build:
